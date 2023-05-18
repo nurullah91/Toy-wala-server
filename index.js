@@ -26,6 +26,15 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
 
+        const toyCollection = client.db("toy-wala").collection("toys");
+
+
+        app.post('/addToy', async(req, res)=>{
+            const toy = req.body;
+            const result = await toyCollection.insertOne(toy);
+            res.send(result);
+        })
+
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -36,3 +45,11 @@ async function run() {
 }
 run().catch(console.dir);
 
+
+app.get('/', (req, res) =>{
+    res.send('Toy wala is running')
+})
+
+app.listen(port, (req, res)=>{
+    console.log(`Toy wala is running on the port ${port}`);
+})
