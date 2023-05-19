@@ -29,8 +29,10 @@ async function run() {
         const toyCollection = client.db("toy-wala").collection("toys");
 
 
-        app.post('/addToy', async(req, res)=>{
+        app.post('/addtoy', async(req, res)=>{
             const toy = req.body;
+            toy.createdAt = new Date();
+            
             const result = await toyCollection.insertOne(toy);
             res.send(result);
         })
