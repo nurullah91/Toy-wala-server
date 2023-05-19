@@ -29,12 +29,23 @@ async function run() {
         const toyCollection = client.db("toy-wala").collection("toys");
 
 
-        app.post('/addtoy', async(req, res)=>{
+        app.post('/addtoy', async (req, res) => {
             const toy = req.body;
             toy.createdAt = new Date();
-            
+
             const result = await toyCollection.insertOne(toy);
             res.send(result);
+        });
+
+
+        app.get('/cars-by-category/:category', async (req, res) => {
+            const carCategory = req.params.category;
+            console.log(carCategory);
+            
+            const cars = await toyCollection.find({ subCategory: carCategory }).toArray();
+
+            // console.log(cars);
+            res.send(cars);
         })
 
         // Send a ping to confirm a successful connection
@@ -48,10 +59,10 @@ async function run() {
 run().catch(console.dir);
 
 
-app.get('/', (req, res) =>{
+app.get('/', (req, res) => {
     res.send('Toy wala is running')
 })
 
-app.listen(port, (req, res)=>{
+app.listen(port, (req, res) => {
     console.log(`Toy wala is running on the port ${port}`);
 })
