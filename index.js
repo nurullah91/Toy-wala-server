@@ -40,11 +40,17 @@ async function run() {
 
         app.get('/cars-by-category/:category', async (req, res) => {
             const carCategory = req.params.category;
-            console.log(carCategory);
+           
             
+            if(carCategory == "all"){
+                const cars = await toyCollection.find().toArray();
+                
+                return res.send(cars)
+
+            }
             const cars = await toyCollection.find({ subCategory: carCategory }).toArray();
 
-            // console.log(cars);
+            console.log(cars);
             res.send(cars);
         })
 
