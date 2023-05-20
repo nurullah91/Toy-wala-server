@@ -86,10 +86,25 @@ async function run() {
             // get email from query
             const email = req.query?.email;
 
+            // get sort info 
+            const sorting = req.query?.sort;
+          
+
             // create a object 
             const query = {email}
+
+
+            if(sorting == 'low'){
+                const result = await toyCollection.find(query).sort({price: 1}).toArray();
+             return res.send(result);
+            }
+
+            if(sorting == 'high'){
+                const result = await toyCollection.find(query).sort({price: -1}).toArray();
+             return res.send(result);
+            }
+
             const result = await toyCollection.find(query).toArray();
-            // console.log(result);
             res.send(result);
         })
 
