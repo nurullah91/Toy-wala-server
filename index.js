@@ -29,6 +29,16 @@ async function run() {
         const toyCollection = client.db("toy-wala").collection("toys");
 
 
+
+        // create a index on name field;
+        const indexKeys = {toyName: 1, subCategory: 1};
+        const indexOptions = {name: 'nameCategory'};
+        const index = await toyCollection.createIndex(indexKeys, indexOptions);
+
+
+
+
+
         // add a toy 
         app.post('/addtoy', async (req, res) => {
             const toy = req.body;
@@ -62,12 +72,10 @@ async function run() {
 
             if(limit == 'all'){
                 const toys = await toyCollection.find().toArray();
-                console.log(toys);
                 return res.send(toys);
             }
 
             const toys = await toyCollection.find().limit(limit).toArray();
-            console.log(toys);
             res.send(toys)
         })
 
@@ -86,6 +94,18 @@ async function run() {
         })
 
 
+        // get toy car using search
+        app.get('/cars-by-name/:text', async(req, res)=>{
+            const searchedText = req.params.text;
+            const result = await toyCollection.find({
+                $or: [
+                    {toyName: {$regex: searchedText, $options: "i"}},
+                    {subCategory: {$regex: searchedText, $options: "i"}}
+                ],
+            }).toArray();
+
+            res.send(result);
+        })
 
 
         // Send a ping to confirm a successful connection
