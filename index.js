@@ -44,14 +44,28 @@ async function run() {
             
             if(carCategory == "all"){
                 const cars = await toyCollection.find().toArray();
-                
+
                 return res.send(cars)
 
             }
             const cars = await toyCollection.find({ subCategory: carCategory }).toArray();
 
-            console.log(cars);
             res.send(cars);
+        })
+
+
+        app.get('/all-toys/:limit', async(req, res)=>{
+            const limit = parseInt(req.params.limit);
+
+            if(limit == 'all'){
+                const toys = await toyCollection.find().toArray();
+                console.log(toys);
+                return res.send(toys);
+            }
+
+            const toys = await toyCollection.find().limit(limit).toArray();
+            console.log(toys);
+            res.send(toys)
         })
 
         // Send a ping to confirm a successful connection
