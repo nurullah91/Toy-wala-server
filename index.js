@@ -102,6 +102,29 @@ async function run() {
             res.send(toy);
         })
 
+        // update a toy car info
+        app.put('/toy-car/:id', async(req, res) =>{
+            const id = req.params.id;
+            const filter = {_id: new ObjectId(id)};
+            const options = {upsert: true};
+            const toy = req.body;
+
+            // getting updated info 
+            const updateToy = {
+                $set: {
+                    details: toy.details, 
+                    price: toy.price, 
+                    quantity: toy.quantity, 
+                    ratings: toy.ratings, 
+                   
+                }
+            }
+
+            const result = await toyCollection.updateOne(filter, updateToy, options)
+            
+            res.send(result);
+        })
+
 
         // get toy car using search
         app.get('/cars-by-name/:text', async(req, res)=>{
@@ -112,6 +135,16 @@ async function run() {
                     {subCategory: {$regex: searchedText, $options: "i"}}
                 ],
             }).toArray();
+
+            res.send(result);
+        })
+
+
+        app.delete('/my-toys/:id', async(req, res)=>{
+            const id = req.params.id;
+            const query = {_id: new ObjectId(id)};
+
+            const result = await toyCollection.deleteOne(query);
 
             res.send(result);
         })
