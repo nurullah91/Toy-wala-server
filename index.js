@@ -29,6 +29,7 @@ async function run() {
         const toyCollection = client.db("toy-wala").collection("toys");
 
 
+        // add a toy 
         app.post('/addtoy', async (req, res) => {
             const toy = req.body;
             toy.createdAt = new Date();
@@ -38,10 +39,10 @@ async function run() {
         });
 
 
+        // getting cars by category
         app.get('/cars-by-category/:category', async (req, res) => {
             const carCategory = req.params.category;
            
-            
             if(carCategory == "all"){
                 const cars = await toyCollection.find().toArray();
 
@@ -54,7 +55,9 @@ async function run() {
         })
 
 
+        // getting all toy using limit or all;
         app.get('/all-toys/:limit', async(req, res)=>{
+            // get limit from params
             const limit = parseInt(req.params.limit);
 
             if(limit == 'all'){
@@ -67,6 +70,23 @@ async function run() {
             console.log(toys);
             res.send(toys)
         })
+
+
+
+        // get multiple toy using email;
+        app.get('/my-toys', async(req, res)=>{
+            // get email from query
+            const email = req.query?.email;
+
+            // create a object 
+            const query = {email}
+            const result = await toyCollection.find(query).toArray();
+            // console.log(result);
+            res.send(result);
+        })
+
+
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
