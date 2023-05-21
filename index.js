@@ -32,6 +32,8 @@ async function run() {
         const galleryCollection = client.db("toy-wala").collection("gallery");
 
 
+        // review collection
+        const reviewCollection = client.db("toy-wala").collection("review");
 
 
 
@@ -75,7 +77,16 @@ async function run() {
             const cursor = galleryCollection.find();
 
             const result = await cursor.toArray();
+          
+            res.send(result);
+        })
 
+
+        // review data load
+        app.get('/reviews', async(req, res)=>{
+            const cursor = reviewCollection.find();
+            const result = await cursor.toArray();
+            
             res.send(result);
         })
 
