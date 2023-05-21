@@ -28,12 +28,17 @@ async function run() {
 
         const toyCollection = client.db("toy-wala").collection("toys");
 
+        // gallery images
+        const galleryCollection = client.db("toy-wala").collection("gallery");
 
 
-        // create a index on name field;
-        const indexKeys = {toyName: 1, subCategory: 1};
-        const indexOptions = {name: 'nameCategory'};
-        const index = await toyCollection.createIndex(indexKeys, indexOptions);
+
+
+
+        // // create a index on name field;
+        // const indexKeys = {toyName: 1, subCategory: 1};
+        // const indexOptions = {name: 'nameCategory'};
+        // const index = await toyCollection.createIndex(indexKeys, indexOptions);
 
 
 
@@ -62,6 +67,16 @@ async function run() {
             const cars = await toyCollection.find({ subCategory: carCategory }).toArray();
 
             res.send(cars);
+        })
+
+        // gallery image get 
+        app.get('/gallery', async(req, res) => {
+
+            const cursor = galleryCollection.find();
+
+            const result = await cursor.toArray();
+
+            res.send(result);
         })
 
 
@@ -166,7 +181,7 @@ async function run() {
 
 
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
+        // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
