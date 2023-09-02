@@ -30,6 +30,7 @@ async function run() {
 
         // gallery images
         const galleryCollection = client.db("toy-wala").collection("gallery");
+        const brandCollection = client.db("toy-wala").collection("brands");
 
 
         // review collection
@@ -52,6 +53,22 @@ async function run() {
             toy.createdAt = new Date();
 
             const result = await toyCollection.insertOne(toy);
+            res.send(result);
+        });
+
+        // add a photo to photo gallery 
+        app.post('/add-gallery-photo', async (req, res) => {
+            const photoInfo = req.body;
+            
+            const result = await galleryCollection.insertOne(photoInfo);
+            res.send(result);
+        });
+
+        // add a Review
+        app.post('/add-review', async (req, res) => {
+            const review = req.body;
+            
+            const result = await reviewCollection.insertOne(review);
             res.send(result);
         });
 
@@ -78,6 +95,12 @@ async function run() {
 
             const result = await cursor.toArray();
           
+            res.send(result);
+        })
+
+        // brands data get
+        app.get('/brands', async(req, res)=>{
+            const result = await brandCollection.find().toArray();
             res.send(result);
         })
 
@@ -203,9 +226,9 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('Toy wala is running')
+    res.send('Toy wala server is running')
 })
 
 app.listen(port, (req, res) => {
-    console.log(`Toy wala is running on the port ${port}`);
+    console.log(`Toy wala server is running on the port ${port}`);
 })
